@@ -4,7 +4,8 @@ import matplotlib.ticker as ticker
 
 import datetime
 
-import astrodynamics as ad
+#import astrodynamics as ad
+import astrodynamics as ad 
 import lambert as lb
 
 
@@ -32,8 +33,9 @@ import lambert as lb
 
 # global constants
 mu = 1.32712428e11    # gravitational parameter of the sun (km^3/s^2)
-
-# calculate c3 and delv values from lambert solution
+#-------------------------------------------------------------------------------------------------------------------
+# Section 1: # calculate c3 and delv values from lambert solution
+#-------------------------------------------------------------------------------------------------------------------
 def _get_lambert_estimates_(v_dep, v_arr, r1, r2, flight_time_secs,
                            orb_type, M, path):
     # multiple-solution for m>0 cases. not considered here
@@ -54,7 +56,10 @@ def _get_lambert_estimates_(v_dep, v_arr, r1, r2, flight_time_secs,
     #return c3_dep, delv_total
     return [c3_dep, delv_total]
 
-# get plot data for a departure arrival combination
+##-------------------------------------------------------------------------------------------------------------------
+# Section 1: # get plot data for a departure arrival combination
+#------------------------------------------------------------------------------------------------------------------- 
+# 
 def _get_porkchop_plot_data_(dep_planet_name, jd_dep, arr_planet_name, jd_arr):
     # Departure and arrival planets id
     dep_planet_id = ad.get_planet_id(dep_planet_name)
@@ -80,7 +85,8 @@ def _get_porkchop_plot_data_(dep_planet_name, jd_dep, arr_planet_name, jd_arr):
     out = jd_dep_str, jd_arr_str, flight_time_days, \
           c3_and_delv_1, c3_and_delv_2, coe_dep, coe_arr
     return out
-
+#-------------------------------------------------------------------------------------------------------------------
+# 
 # get porkchop plot contour data
 def _generate_porkchop_plot_data_(dep_planet_name, jd_dep_list, arr_planet_name, jd_arr_list):
     # initialize contour lists
@@ -120,12 +126,14 @@ def _generate_porkchop_plot_data_(dep_planet_name, jd_dep_list, arr_planet_name,
           c3_dep_1_list, c3_dep_2_list, \
           delv_t_1_list, delv_t_2_list
     return out
-
+#-------------------------------------------------------------------------------------------------------------------
+# 
 # from the given departue, arrival dates, generate a valid
 # list of axis dates for plotting
 def _generate_date_matrix_(jd_dep, jd_arr):
     # days from dep and arr date
-    jd_dep_end, jd_arr_end = 180, 400 #160, 400 
+    #I AM CHANGING THIS
+    jd_dep_end, jd_arr_end = 365*2, 600*4 #160, 400 
 
     # check for date range validity
     val = jd_arr - (jd_dep + jd_dep_end)
@@ -135,13 +143,14 @@ def _generate_date_matrix_(jd_dep, jd_arr):
         raise Exception("error: tof is %s days. change dep arr dates." % diff  )
 
     # grid resolution of the porkchop plot
-    dt_dep, dt_arr = 2, 5   
+    dt_dep, dt_arr = 30, 60   
     # generate list of jd's
     jd_dep_list = np.array( list(range(int(jd_dep), int(jd_dep+jd_dep_end), int(dt_dep) )) )
     jd_arr_list = np.array( list(range(int(jd_arr), int(jd_arr+jd_arr_end), int(dt_arr) )) )
     # return date matrix
     return jd_dep_list, jd_arr_list
-
+#-------------------------------------------------------------------------------------------------------------------
+# 
 # plot porkchop plot
 def plot_porkchop(title, xlist, ylist,
                   xy_contour_data_1, xy_contour_data_2, clevels,
@@ -152,18 +161,23 @@ def plot_porkchop(title, xlist, ylist,
         x_tick_spacing, y_tick_spacing = 5, 3
         ax.xaxis.set_major_locator(ticker.MultipleLocator(x_tick_spacing))
         ax.yaxis.set_major_locator(ticker.MultipleLocator(y_tick_spacing))
+        
         # fontsize of major, minor ticks label
         ax.xaxis.set_tick_params(labelsize=7, rotation=90)
         ax.yaxis.set_tick_params(labelsize=7)
+        
         ax.set_xlabel("Dep Date (dd-mm-yyyy)", fontsize=8)        
         ax.set_ylabel("Arr Date (dd-mm-yyyy)", fontsize=8)
 
         # Customize the major grid
         ax.grid(which='major', linestyle='dashdot', linewidth='0.5', color='gray')
+        
         # Customize the minor grid
-        ax.grid(which='minor', linestyle='dotted', linewidth='0.5', color='gray')       
+        ax.grid(which='minor', linestyle='dotted', linewidth='0.5', color='gray')
+        
         # Turn on the minor ticks (minor grid)
-        ax.minorticks_on()        
+        ax.minorticks_on()
+        
         # Turn off the display of all ticks.
         ax.tick_params(which='both',
                         top='off',
@@ -172,7 +186,16 @@ def plot_porkchop(title, xlist, ylist,
                         bottom='off')
         # end function
         return
-
+    #fig, ax = plt.subplots(figsize=(14,8))
+    #ax.set_aspect('auto')
+    #set_ticks(ax)
+    #ax.set_title(title, fontsize=10)
+    #plt.tight_layout()
+    #plt.show()
+    #return
+                        
+#-------------------------------------------------------------------------------------------------------------------
+# 
     # countour text format ( include 'days')
     def tp_fmt(x):
         s = f"{x:.1f}"
@@ -209,7 +232,8 @@ def plot_porkchop(title, xlist, ylist,
     # show
     plt.show()
     return
-
+#-------------------------------------------------------------------------------------------------------------------
+# 
 # main function to create the porkchop plot
 def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plot_type ='delv_plot'):
     # verify departure and arrival dates
@@ -236,8 +260,14 @@ def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plo
     jd_dep_str_list, jd_arr_str_list, tof_days_list, c3_dep_1_list, c3_dep_2_list, delv_t_1_list, delv_t_2_list = res
     
     # contour levels    
-    c3_levels = [4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 30, 50]
-    t_levels  = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
+    #c3_levels = [4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 30, 50]
+    #t_levels  = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
+    c3_min, c3_max = np.nanmin([c3_dep_1_list, c3_dep_2_list]), np.nanmax([c3_dep_1_list, c3_dep_2_list])
+    tof_min, tof_max = np.nanmin(tof_days_list), np.nanmax(tof_days_list)
+
+    c3_levels = np.linspace(c3_min, c3_max, 12)   # 12 evenly spaced levels
+    t_levels  = np.linspace(tof_min, tof_max, 10) # 10 evenly spaced levels
+
     
     # plot    
     if plot_type == 'delv_plot':
@@ -253,14 +283,16 @@ def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plo
     else: raise Exception("error: plot types should be c3_plot or delv_plot")   
     # return    
     return 
-
+#-------------------------------------------------------------------------------------------------------------------
+# 
 
 # main function
 if __name__ == "__main__":
     # Mission space with nodal transfer.
-    dep_planet = 'Earth'; dep_date = '25-12-2032'; #(format - dd-mm-yyyy)
-    arr_planet = 'Mars';  arr_date = '04-10-2033'; #(format - dd-mm-yyyy)
+    dep_planet = 'Earth'; dep_date = '25-12-2035'; #(format - dd-mm-yyyy)
+    arr_planet = 'Neptune';  arr_date = '25-12-2045'; #(format - dd-mm-yyyy)
     
     # solve
     plot_values = 'delv_plot' # 'delv_plot' or 'c3_plot'
     make_porkchop_plot(dep_planet, dep_date, arr_planet, arr_date, plot_values)
+#-------------------------------------------------------------------------------
