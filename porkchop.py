@@ -133,7 +133,7 @@ def _generate_porkchop_plot_data_(dep_planet_name, jd_dep_list, arr_planet_name,
 def _generate_date_matrix_(jd_dep, jd_arr):
     # days from dep and arr date
     #I AM CHANGING THIS
-    jd_dep_end, jd_arr_end = 365*2, 600*4 #160, 400 
+    jd_dep_end, jd_arr_end = 365*2, 1000*4 #160, 400 
 
     # check for date range validity
     val = jd_arr - (jd_dep + jd_dep_end)
@@ -143,7 +143,7 @@ def _generate_date_matrix_(jd_dep, jd_arr):
         raise Exception("error: tof is %s days. change dep arr dates." % diff  )
 
     # grid resolution of the porkchop plot
-    dt_dep, dt_arr = 30, 60   
+    dt_dep, dt_arr = 10, 60   # 30 60
     # generate list of jd's
     jd_dep_list = np.array( list(range(int(jd_dep), int(jd_dep+jd_dep_end), int(dt_dep) )) )
     jd_arr_list = np.array( list(range(int(jd_arr), int(jd_arr+jd_arr_end), int(dt_arr) )) )
@@ -158,7 +158,7 @@ def plot_porkchop(title, xlist, ylist,
     
     def set_ticks(ax):
         # major grid
-        x_tick_spacing, y_tick_spacing = 5, 3
+        x_tick_spacing, y_tick_spacing = 2, 5 #2 5
         ax.xaxis.set_major_locator(ticker.MultipleLocator(x_tick_spacing))
         ax.yaxis.set_major_locator(ticker.MultipleLocator(y_tick_spacing))
         
@@ -260,8 +260,9 @@ def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plo
     jd_dep_str_list, jd_arr_str_list, tof_days_list, c3_dep_1_list, c3_dep_2_list, delv_t_1_list, delv_t_2_list = res
     
     # contour levels    
-    #c3_levels = [4, 5, 6, 8, 10, 12, 14, 16, 18, 19, 20, 30, 50]
-    #t_levels  = [100, 150, 200, 250, 300, 350, 400, 450, 500, 550]
+    #c3_levels = [8, 9, 10, 12, 14, 15, 17, 18, 20, 22, 24, 30, 50]
+    #t_levels  = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 6500, 7000, 10000]
+
     c3_min, c3_max = np.nanmin([c3_dep_1_list, c3_dep_2_list]), np.nanmax([c3_dep_1_list, c3_dep_2_list])
     tof_min, tof_max = np.nanmin(tof_days_list), np.nanmax(tof_days_list)
 
