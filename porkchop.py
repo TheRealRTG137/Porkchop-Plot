@@ -133,7 +133,7 @@ def _generate_porkchop_plot_data_(dep_planet_name, jd_dep_list, arr_planet_name,
 def _generate_date_matrix_(jd_dep, jd_arr):
     # days from dep and arr date
     #I AM CHANGING THIS
-    jd_dep_end, jd_arr_end = 365*2, 1000*4 #160, 400 
+    jd_dep_end, jd_arr_end = 365*2, 365*8 #160, 400 
 
     # check for date range validity
     val = jd_arr - (jd_dep + jd_dep_end)
@@ -260,14 +260,14 @@ def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plo
     jd_dep_str_list, jd_arr_str_list, tof_days_list, c3_dep_1_list, c3_dep_2_list, delv_t_1_list, delv_t_2_list = res
     
     # contour levels    
-    #c3_levels = [8, 9, 10, 12, 14, 15, 17, 18, 20, 22, 24, 30, 50]
-    #t_levels  = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 6500, 7000, 10000]
+    c3_levels = [8**2, 9**2, 10**2, 11**2, 12**2, 13**2, 14**2, 15**2, 16**2, 17**2, 20**2, 25**2, 50**2]
+    t_levels  = [2000, 2500, 3000, 3500, 4000, 4300, 4400, 4500, 4600, 4700, 5000, 5250]
 
-    c3_min, c3_max = np.nanmin([c3_dep_1_list, c3_dep_2_list]), np.nanmax([c3_dep_1_list, c3_dep_2_list])
-    tof_min, tof_max = np.nanmin(tof_days_list), np.nanmax(tof_days_list)
+    #c3_min, c3_max = np.nanmin([c3_dep_1_list, c3_dep_2_list]), np.nanmax([c3_dep_1_list, c3_dep_2_list])
+    #tof_min, tof_max = np.nanmin(tof_days_list), np.nanmax(tof_days_list)
 
-    c3_levels = np.linspace(c3_min, c3_max, 12)   # 12 evenly spaced levels
-    t_levels  = np.linspace(tof_min, tof_max, 10) # 10 evenly spaced levels
+    #c3_levels = np.linspace(c3_min, c3_max, 12)   # 12 evenly spaced levels
+    #t_levels  = np.linspace(tof_min, tof_max, 10) # 10 evenly spaced levels
 
     
     # plot    
@@ -290,8 +290,8 @@ def make_porkchop_plot(dep_planet_name, dep_date, arr_planet_name, arr_date, plo
 # main function
 if __name__ == "__main__":
     # Mission space with nodal transfer.
-    dep_planet = 'Earth'; dep_date = '25-12-2035'; #(format - dd-mm-yyyy)
-    arr_planet = 'Neptune';  arr_date = '25-12-2045'; #(format - dd-mm-yyyy)
+    dep_planet = 'Earth'; dep_date = '25-12-2033'; #(format - dd-mm-yyyy)
+    arr_planet = 'Neptune';  arr_date = '25-12-2037'; #(format - dd-mm-yyyy)
     
     # solve
     plot_values = 'delv_plot' # 'delv_plot' or 'c3_plot'
